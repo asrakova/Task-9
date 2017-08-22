@@ -10,6 +10,9 @@ namespace Task_9
     {
         static void Main(string[] args)
         {
+            DoublyList er = DoublyList.MakeDoublyList(10);
+            DoublyList.ShowDoublyList(er);
+            Console.ReadLine();
         }
     }
 }
