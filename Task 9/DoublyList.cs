@@ -78,15 +78,16 @@ namespace Task_9
                         t = t.prev;
                     if (t.prev == null)
                     {
-                        end.next = p;
-                        p.prev = end;
-                        end = p;
-                    }
-                    else if (t == beg)
-                    {
                         p.next = beg;
                         beg.prev = p;
                         beg = p;
+                        
+                    }
+                    else if (t == end)
+                    {
+                        end.next = p;
+                        p.prev = end;
+                        end = p;
                     }
                     else
                     {
@@ -100,38 +101,21 @@ namespace Task_9
             return beg;
         }
 
-        /// <summary>
-        /// Добавление элемента в список
-        /// </summary>
-        /// <param name="BegDoubly">Двунапрвленный список</param>
-        /// <param name="number">Номер позиции для добавления элемента</param>
-        //public static void AddElement(ref DoublyList BegDoubly, int number)
-        //{
-        //    Console.WriteLine("Введите элемент");
-        //    string info = Console.ReadLine();
-        //    DoublyList newel = MakeDoubly(info);
-        //    if (BegDoubly == null)
-        //        BegDoubly = newel;
-        //    else
-        //    if (number == 1)
-        //    {
-        //        newel.next = BegDoubly;
-        //        BegDoubly.pred = newel;
-        //        BegDoubly = newel;
-        //    }
-        //    else
-        //    {
-        //        DoublyList p = BegDoubly;
-        //        for (int i = 1; i < number - 1; i++)
-        //            BegDoubly = BegDoubly.next;
-        //        BegDoubly.next.pred = newel;
-        //        newel.next = BegDoubly.next;
-        //        newel.pred = BegDoubly;
-        //        BegDoubly.next = newel;
-        //        for (int i = number - 2; i > 0; i--)
-        //            BegDoubly = BegDoubly.pred;
-        //    }
-        //}
+        public static DoublyList SearchElem(DoublyList beg, DoublyList el)
+        {
+            while (beg != el && beg.next != null)
+                beg = beg.next;
+            if (beg.next == null)
+                return null;
+            return beg;
+        }
+
+        public static DoublyList DeleteElem(DoublyList beg, DoublyList el)
+        {
+            DoublyList del = SearchElem(beg, el);
+            if 
+
+        }
 
         /// <summary>
         /// Вывод списка
