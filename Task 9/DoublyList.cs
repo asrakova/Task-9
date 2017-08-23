@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Task_9
 {
     class DoublyList
     {
         public int number;
-        public int data;
+        public double data;
         public DoublyList next, prev;
 
         public DoublyList()
@@ -19,7 +20,7 @@ namespace Task_9
             next = null;
             prev = null;
         }
-        public DoublyList(int num, int data)
+        public DoublyList(int num, double data)
         {
             number = num;
             this.data = data;
@@ -28,7 +29,7 @@ namespace Task_9
         }
         public override string ToString()
         {
-            return "(" + number + ") " + data + " ";
+            return "(№" + number + ") " + data + " ";
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace Task_9
         /// </summary>
         /// <param name="d">Информационное поле текущего элемента</param>
         /// <returns>Заполненный элемент</returns>
-        public static DoublyList MakeDoubly(int num, int d)
+        public static DoublyList MakeDoubly(int num, double d)
         {
             DoublyList p = new DoublyList(num, d);
             return p;
@@ -49,16 +50,25 @@ namespace Task_9
         /// <returns>Заполненный список</returns>
         public static DoublyList MakeDoublyList(int size)
         {
-            Console.WriteLine("Введите элемент");
-            int info = int.Parse(Console.ReadLine());
-            DoublyList beg = MakeDoubly(1, info);
+            // Файлы
+            StreamReader fileRead = new StreamReader("input.txt");
+            string MainStr = fileRead.ReadToEnd();
+            char[] ch = { ' ', '\r', '\n', '\t' };
+            string[] StrNum = MainStr.Split(ch, StringSplitOptions.RemoveEmptyEntries);
+            fileRead.Close();
+            double[] num = new double[size];
+            for (int i = 0; i < StrNum.Length; i++)
+            {
+                bool ok = double.TryParse(StrNum[i], out num[i]);
+            }
+
+            DoublyList beg = MakeDoubly(1, num[0]);
             DoublyList end = beg;
-                        
+
             for (int i = 2; i <= size; i++)
             {
-                Console.WriteLine("Введите элемент");
-                info = int.Parse(Console.ReadLine());
-                DoublyList p = MakeDoubly(i,info);
+                double info = num[i - 1];
+                DoublyList p = MakeDoubly(i, info);
                 if (info > 0)
                 {
                     p.next = beg;
@@ -76,45 +86,89 @@ namespace Task_9
                     DoublyList t = end;
                     while (t.data < 0 && t.prev != null)
                         t = t.prev;
-                    if (t.prev == null)
-                    {
-                        p.next = beg;
-                        beg.prev = p;
-                        beg = p;
-                        
-                    }
-                    else if (t == end)
+                    if (t == end)
                     {
                         end.next = p;
                         p.prev = end;
                         end = p;
+                    }
+                    else if (t.prev == null)
+                    {
+                        p.next = beg;
+                        beg.prev = p;
+                        beg = p;
+
                     }
                     else
                     {
                         t.next.prev = p;
                         p.next = t.next;
                         p.prev = t;
-                        t.next = p;                      
+                        t.next = p;
                     }
                 }
             }
             return beg;
         }
 
-        public static DoublyList SearchElem(DoublyList beg, DoublyList el)
+        /// <summary>
+        /// Поиск элемента по номеру
+        /// </summary>
+        /// <param name="beg">Список</param>
+        /// <param name="num">Номер</param>
+        /// <returns>Искомый элемент</returns>
+        public static DoublyList SearchElemNum(DoublyList beg, int num)
         {
-            while (beg != el && beg.next != null)
+            while (beg.number != num && beg.next != null)
                 beg = beg.next;
             if (beg.next == null)
                 return null;
             return beg;
         }
 
-        public static DoublyList DeleteElem(DoublyList beg, DoublyList el)
+        /// <summary>
+        /// Поиск элемента по данным 
+        /// </summary>
+        /// <param name="beg">Список</param>
+        /// <param name="data">Данные</param>
+        /// <returns>Искомый элемент</returns>
+        public static DoublyList SearchElemData(DoublyList beg, double data)
         {
-            DoublyList del = SearchElem(beg, el);
-            if 
+            while (beg.data != data && beg.next != null)
+                beg = beg.next;
+            if (beg.next == null)
+                return null;
+            return beg;
+        }
 
+        /// <summary>
+        /// Удаление элемента по номеру
+        /// </summary>
+        /// <param name="beg">Список</param>
+        /// <param name="num">Номер</param>
+        /// <returns>Результат удаления</returns>
+        public static DoublyList DeleteElemNum(DoublyList beg, int num)
+        {
+            DoublyList del = SearchElemNum(beg, num);
+            if (del == null) Console.WriteLine("Элемент не найден");
+            else
+                del.prev.next = del.next;
+            return beg;
+        }
+
+        /// <summary>
+        /// Удаление элемента по данным
+        /// </summary>
+        /// <param name="beg">Список</param>
+        /// <param name="data">Данные</param>
+        /// <returns>Результат удаления</returns>
+        public static DoublyList DeleteElemData(DoublyList beg, double data)
+        {
+            DoublyList del = SearchElemData(beg, data);
+            if (del == null) Console.WriteLine("Элемент не найден");
+            else
+                del.prev.next = del.next;
+            return beg;
         }
 
         /// <summary>
